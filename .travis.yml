@@ -8,4 +8,4 @@ services:
 before_script: pip install -r requirements.txt
 
 script:
-  - python -m pytest tests
+  - python -m pytest tests && black ranking tests
