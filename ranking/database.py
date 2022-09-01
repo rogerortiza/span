@@ -1,6 +1,8 @@
 import configparser
+import json
+from typing import Any, Dict, List, NamedTuple
 from pathlib import Path
-from ranking import DB_WRITE_ERROR, SUCCESS
+from ranking import DB_READ_ERROR, DB_WRITE_ERROR, SUCCESS, JSON_ERROR
 
 DEFAULT_DB_FILE_PATH = Path.home().joinpath("ranking_db.json")
 
@@ -18,3 +20,29 @@ def init_database(db_path: Path) -> int:
         return SUCCESS
     except OSError:
         return DB_WRITE_ERROR
+
+class DBResponse(NamedTuple):
+    matches_list: List[Dict[str, Any]]
+    error: int
+
+class DatabaseHandler:
+    def  __init__(self, db_path: Path) -> None:
+        self._db_path = db_path
+    
+    def read_matches(self) -> DBResponse:
+        try:
+            with self._db_path.open("r") as db:
+                try:
+                    return DBResponse(json.load(db), SUCCESS)
+                except json.JSONDecodeError:
+                    return DBResponse([], JSON_ERROR)
+        except OSError:
+            return DBResponse([], DB_READ_ERROR) 
+
+    def write_matches(self, matches_list: List[Dict[str, Any]]) -> DBResponse:
+        try:
+            with self._db_path.open("w") as db:
+                json.dump(matches_list, db, indent=4)
+            return DBResponse(matches_list, SUCCESS)
+        except OSError:
+            return DBResponse(matches_list, DB_WRITE_ERROR)
