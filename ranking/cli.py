@@ -1,5 +1,5 @@
 import typer
-from typing import List, Optional
+from typing import Dict, List, Optional, Any
 from pathlib import Path
 from ranking import __app_name__, __version__, ERRORS, config, database, ranking
 
@@ -31,6 +31,33 @@ def add(match: str = typer.Argument(...)) -> None:
         raise typer.Exit(1)
     else:
         typer.secho("Match was added succesfully", fg=typer.colors.GREEN)
+
+@app.command(name="list")
+def show_all_matches() -> None:
+    """ Return all the matches in the Ranking database"""
+    ranking_controller = get_rankin_controller()
+    matches_list = ranking_controller.get_all_matches()
+
+    if len(matches_list) == 0:
+        typer.secho("There are no matches in the Ranking database yet", fg=typer.colors.YELLOW)
+        raise typer.Exit()
+    
+    typer.secho("\nMatches list:\n", fg=typer.colors.BLUE, bold=True)
+    columns = ("ID.  ", "| Team 1    ", "| Team 2  ")
+    headers = "".join(columns)
+    typer.secho(headers, fg=typer.colors.BLUE, bold=True)
+    typer.secho("-" * len(headers), fg=typer.colors.BLUE, bold=True)
+
+    for id, match in enumerate(matches_list, 1):
+        team_1, team_2 = match.values()
+        typer.secho(
+            f"{id}{(len(columns[0]) - len(str(id))) * ' '}"
+            f"| {team_1['name']}{(len(columns[1]) - len(str(team_1['name'])) - 2 ) * ' '}"
+            f"| {team_2['name']}", 
+            fg=typer.colors.BLUE, bold=True
+        )
+    
+    typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE, bold=True)
 
 
 def get_rankin_controller() -> ranking.RankingController:

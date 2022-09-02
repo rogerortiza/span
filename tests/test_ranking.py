@@ -98,3 +98,8 @@ def test_add(mock_matches_json, match_1, expected):
     assert ranking_controller.add(match_1) == expected
     read = ranking_controller._db_handler.read_matches()
     assert len(read.matches_list) == 6
+
+def test_show_all_matches(mock_matches_json):
+    ranking_controller = ranking.RankingController(mock_matches_json)
+    matches = ranking_controller.get_all_matches()
+    assert len(matches) == 5

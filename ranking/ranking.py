@@ -56,3 +56,9 @@ class RankingController:
         write = self._db_handler.write_matches(read.matches_list)
 
         return CurrentRanking(match, write.error)
+
+    def get_all_matches(self) -> List[Dict[str, Any]]:
+        """ Return all the matches in the Ranking database"""
+        read = self._db_handler.read_matches()
+        
+        return read.matches_list
