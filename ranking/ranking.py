@@ -20,6 +20,7 @@ class RankingController:
 
         if not team_1 or not team_2:
             typer.secho("You must provide two teams", fg=typer.colors.YELLOW)
+            raise typer.Exit(1)
 
         team_1_values = team_1.split(" ")
         team_2_values = team_2.split(" ")
@@ -27,8 +28,9 @@ class RankingController:
         team_1_score = team_1_values.pop()
         team_2_score = team_2_values.pop()
 
-        if not team_1_score.isnumeric or not team_2_score.isnumeric:
-            typer.secho(f"You must provide the score of the team", fg=typer.colors.YELLOW)
+        if not team_1_score.isnumeric() or not team_2_score.isnumeric():
+            typer.secho(f"You must provide the score for both teams", fg=typer.colors.YELLOW)
+            raise typer.Exit(1)
 
         team_1_name = " ".join(team_1_values)
         team_2_name = " ".join(team_2_values)

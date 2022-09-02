@@ -20,6 +20,18 @@ def init(db_path: str = typer.Option(str(database.DEFAULT_DB_FILE_PATH), "--db_p
     else:
         typer.secho(f"The Ranking database is {db_path}", fg=typer.colors.GREEN)
 
+@app.command()
+def add(match: str = typer.Argument(...)) -> None:
+    """ Add a new match into Ranking database """
+    ranking_controller = get_rankin_controller()
+    match_added, error = ranking_controller.add(match)
+
+    if error:
+        typer.secho(f"Adding match failed with '{ERRORS[error]}'", fg=typer.colors.RED)
+        raise typer.Exit(1)
+    else:
+        typer.secho("Match was added succesfully", fg=typer.colors.GREEN)
+
 
 def get_rankin_controller() -> ranking.RankingController:
     if config.CONFIG_DIR_PATH.exists():
