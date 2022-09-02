@@ -1,7 +1,7 @@
 import typer
-from typing import Optional
+from typing import List, Optional
 from pathlib import Path
-from ranking import __app_name__, __version__, ERRORS, config, database
+from ranking import __app_name__, __version__, ERRORS, config, database, ranking
 
 app = typer.Typer()
 
@@ -19,6 +19,20 @@ def init(db_path: str = typer.Option(str(database.DEFAULT_DB_FILE_PATH), "--db_p
         raise typer.Exit(1)
     else:
         typer.secho(f"The Ranking database is {db_path}", fg=typer.colors.GREEN)
+
+
+def get_rankin_controller() -> ranking.RankingController:
+    if config.CONFIG_DIR_PATH.exists():
+        db_path = database.get_database_path(config.CONFIG_FILE_PATH)
+    else:
+        typer.secho("Config file not found. Please, run 'ranking init' command", fg=typer.colors.RED)
+        raise typer.Exit(1)
+    
+    if db_path.exists():
+        return ranking.RankingController(db_path)
+    else:
+        typer.secho("Ranking database not found. Please, run 'ranking init' command", fg=typer.colors.RED)
+        raise typer.Exit(1)
 
 
 def _version_callback(value: bool) -> None:
