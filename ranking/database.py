@@ -6,29 +6,33 @@ from ranking import DB_READ_ERROR, DB_WRITE_ERROR, SUCCESS, JSON_ERROR
 
 DEFAULT_DB_FILE_PATH = Path.home().joinpath("ranking_db.json")
 
+
 def get_database_path(config_file: Path) -> Path:
-    """ Return the current path to the Ranking database """
+    """Return the current path to the Ranking database"""
     config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
 
     return Path(config_parser["General"]["database"])
 
+
 def init_database(db_path: Path) -> int:
-    """ Create the Ranking database """
+    """Create the Ranking database"""
     try:
         db_path.write_text("[]")
         return SUCCESS
     except OSError:
         return DB_WRITE_ERROR
 
+
 class DBResponse(NamedTuple):
     matches_list: List[Dict[str, Any]]
     error: int
 
+
 class DatabaseHandler:
-    def  __init__(self, db_path: Path) -> None:
+    def __init__(self, db_path: Path) -> None:
         self._db_path = db_path
-    
+
     def read_matches(self) -> DBResponse:
         try:
             with self._db_path.open("r") as db:
@@ -37,7 +41,7 @@ class DatabaseHandler:
                 except json.JSONDecodeError:
                     return DBResponse([], JSON_ERROR)
         except OSError:
-            return DBResponse([], DB_READ_ERROR) 
+            return DBResponse([], DB_READ_ERROR)
 
     def write_matches(self, matches_list: List[Dict[str, Any]]) -> DBResponse:
         try:

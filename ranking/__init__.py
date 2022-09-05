@@ -10,7 +10,10 @@ __version__ = "1.0"
     DB_WRITE_ERROR,
     JSON_ERROR,
     ID_ERROR,
-) = range(7)
+    MISSING_TEAM_ERROR,
+    NO_SCORE_ERROR,
+    SAME_TEAM_ERROR,
+) = range(10)
 
 ERRORS = {
     DIR_ERROR: "Config directory error",
@@ -18,4 +21,7 @@ ERRORS = {
     DB_READ_ERROR: "Database read error",
     DB_WRITE_ERROR: "Database write error",
     ID_ERROR: "Ranking id error",
+    MISSING_TEAM_ERROR: "You must provide two teams",
+    NO_SCORE_ERROR: "You must provide the score for both teams",
+    SAME_TEAM_ERROR: "Teams should be different, please try again!",
 }
