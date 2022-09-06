@@ -25,15 +25,28 @@ def init_database(db_path: Path) -> int:
 
 
 class DBResponse(NamedTuple):
+    """The response comming from the Ranking database.
+
+    Args:
+        NamedTuple (_type_): _description_
+    """
+
     matches_list: List[Dict[str, Any]]
     error: int
 
 
 class DatabaseHandler:
+    """ To read and write in the database"""
+
     def __init__(self, db_path: Path) -> None:
         self._db_path = db_path
 
     def read_matches(self) -> DBResponse:
+        """Read all the matches in the Ranking database.
+
+        Returns:
+            DBResponse: List of matches
+        """
         try:
             with self._db_path.open("r") as db:
                 try:
@@ -44,6 +57,14 @@ class DatabaseHandler:
             return DBResponse([], DB_READ_ERROR)
 
     def write_matches(self, matches_list: List[Dict[str, Any]]) -> DBResponse:
+        """Write macthes in the database.
+
+        Args:
+            matches_list (List[Dict[str, Any]]): List of matches including the new match
+
+        Returns:
+            DBResponse: List of matches
+        """
         try:
             with self._db_path.open("w") as db:
                 json.dump(matches_list, db, indent=4)

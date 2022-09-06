@@ -35,9 +35,17 @@ def init(
         typer.secho(f"The Ranking database is {db_path}", fg=typer.colors.GREEN)
 
 
-@app.command()
+@app.command(name="add")
 def add(match: str = typer.Argument(...)) -> None:
-    """Add a new match into Ranking database"""
+    """**add** command -> Add a new match into Ranking database
+
+    Args:
+        match (str, optional): Receives an string with the name of
+        the two teams with their goals. Defaults to typer.Argument(...).
+
+    Raises:
+        typer.Exit: 1
+    """
     ranking_controller = get_rankin_controller()
     match_added, error = ranking_controller.add(match)
 
@@ -53,7 +61,12 @@ def add(match: str = typer.Argument(...)) -> None:
 
 @app.command(name="all_matches")
 def show_all_matches() -> None:
-    """Show all the matches in the Ranking database"""
+    """**all_matches** command -> Show all the matches registered in the Ranking database
+
+    Raises:
+        typer.Exit: _description_
+        typer.Exit: _description_
+    """
     ranking_controller = get_rankin_controller()
     matches_list, error = ranking_controller.get_all_matches()
 
@@ -91,7 +104,11 @@ def show_all_matches() -> None:
 
 @app.command(name="standings")
 def show_ranking() -> None:
-    """Show the table rank"""
+    """Show the table rank
+
+    Raises:
+        typer.Exit: 1
+    """
     ranking_controller = get_rankin_controller()
     matches_list, error = ranking_controller.show_table_ranking()
 
@@ -124,6 +141,17 @@ def show_ranking() -> None:
 
 
 def get_rankin_controller() -> ranking.RankingController:
+    """Every time the Ranking application runs, it needs to access the
+    RankinController class and connect the CLI with the database. This Method
+    checks if the database exists and returns the controller.
+
+    Raises:
+        typer.Exit: 1
+
+    Returns:
+        ranking.RankingController: The controller to communicates the CLI app with
+        the database.
+    """
     if config.CONFIG_DIR_PATH.exists():
         db_path = database.get_database_path(config.CONFIG_FILE_PATH)
     else:

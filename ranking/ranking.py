@@ -31,7 +31,16 @@ class RankingController:
         self._db_handler = DatabaseHandler(db_path)
 
     def add(self, match: str) -> CurrentMatch:
-        """Add a new match to the Ranking database"""
+        """Adds a new match to the Ranking database.
+
+        Args:
+            match (str): It is a string with the name of
+            both teams alongside their score, separated by a comma.
+            Example: Lions 2, Snakes 3
+
+        Returns:
+            CurrentMatch: A match object
+        """
         teams = match.split(",")
         team_1 = teams[0].strip()
         team_2 = teams[1].strip()
@@ -70,8 +79,23 @@ class RankingController:
 
         return CurrentMatch(match, write.error)
 
+    def clean_db(self) -> None:
+        """Removes all matches from the Ranking database
+
+        Returns:
+            None
+        """
+        write = self._db_handler.write_matches([])
+
+        return CurrentMatches([], write.error)
+
     def get_all_matches(self) -> List[Dict[str, Any]]:
-        """Return all the matches in the Ranking database"""
+        """Return all the matches in the Ranking database
+
+        Returns:
+            List[Dict[str, Any]]: A list with all the matches
+            registered in the Ranking database
+        """
         read = self._db_handler.read_matches()
 
         if read.error:
@@ -80,7 +104,12 @@ class RankingController:
         return CurrentMatches(read.matches_list, SUCCESS)
 
     def show_table_ranking(self) -> List[Tuple[str, int]]:
-        """Return tha table rank"""
+        """Return the table rank for the league.
+
+        Returns:
+            List[Tuple[str, int]]: The Ranking table. A list with
+            all the teams ordered by points in descending order.
+        """
         read = self._db_handler.read_matches()
 
         if read.error:
@@ -92,7 +121,16 @@ class RankingController:
 
         return CurrentRank(dict(ranking), SUCCESS)
 
-    def _calculate_points(self, matches):
+    def _calculate_points(self, matches) -> Dict:
+        """This method is a helper in order to calculate the points
+        by each team
+
+        Args:
+            matches (List): All the matches in the Ranking database
+
+        Returns:
+            Dict: Teams with their points
+        """
         result = {}
 
         for match in matches:
