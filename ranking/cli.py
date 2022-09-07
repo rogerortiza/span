@@ -102,7 +102,7 @@ def show_all_matches() -> None:
     typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE, bold=True)
 
 
-@app.command(name="standings")
+@app.command(name="show_table_rank")
 def show_ranking() -> None:
     """Show the table rank
 

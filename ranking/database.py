@@ -36,7 +36,7 @@ class DBResponse(NamedTuple):
 
 
 class DatabaseHandler:
-    """ To read and write in the database"""
+    """To read and write in the database"""
 
     def __init__(self, db_path: Path) -> None:
         self._db_path = db_path

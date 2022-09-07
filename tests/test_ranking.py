@@ -13,14 +13,11 @@ from ranking import (
 )
 
 runner = CliRunner()
+""" This runner is what will "invoke" or "call" your command line application, 
+in order to perform the unittest for the cli commands  """
 
 
-def test_version():
-    result = runner.invoke(cli.app, ["--version"])
-    assert result.exit_code == 0
-    assert f"{__app_name__} v{__version__}\n" in result.stdout
-
-
+# Adding inital data into the database
 @pytest.fixture
 def mock_matches_json(tmp_path):
     matches = [
@@ -53,6 +50,7 @@ def mock_matches_json(tmp_path):
     return db_file
 
 
+# Dummy data in order to test the Ranking Controller methods.
 test_match_1 = {
     "match": "Lions 3, Snakes 3",
     "teams": {
@@ -77,6 +75,42 @@ test_match_4 = {
 }
 
 
+# Unittest for CLI Commands
+def test_version():
+    result = runner.invoke(cli.app, ["--version"])
+    assert result.exit_code == 0
+    assert f"{__app_name__} v{__version__}\n" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "match, expected",
+    [
+        pytest.param(
+            test_match_2["match"],
+            (test_match_2["error"]),
+        ),
+    ],
+)
+def test_add_command(mock_matches_json, match, expected):
+    result = runner.invoke(cli.app, ["add", match])
+    assert result.exit_code == 1
+    assert (
+        "Adding match 'Lions 1,' failed with error: 'You must provide two teams'\n"
+        in result.stdout
+    )
+
+
+def test_show_all_matches_command():
+    result = runner.invoke(cli.app, ["all_matches"])
+    assert result.exit_code == 0
+
+
+def test_show_ranking():
+    result = runner.invoke(cli.app, ["show_table_rank"])
+    assert result.exit_code == 0
+
+
+# Unitest for RankingController methods
 @pytest.mark.parametrize(
     "match, expected",
     [
