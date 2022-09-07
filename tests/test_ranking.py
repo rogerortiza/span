@@ -84,32 +84,23 @@ def test_version():
     assert f"{__app_name__} v{__version__}\n" in result.stdout
 
 
-# @pytest.mark.parametrize(
-#     "match, expected",
-#     [
-#         pytest.param(
-#             test_match_2["match"],
-#             (test_match_2["error"]),
-#         ),
-#     ],
-# )
-# def test_add_command(match, expected):
-#     result = runner.invoke(cli.app, ["add", match])
-#     assert result.exit_code == 1
-#     assert (
-#         "Adding match 'Lions 1,' failed with error: 'You must provide two teams'\n"
-#         in result.stdout
-#     )
+def test_add_command():
+    result = runner.invoke(cli.app, ["add", test_match_2["match"]])
+    assert result.exit_code == 1
+    assert (
+        "Adding match 'Lions 1,' failed with error: 'You must provide two teams'\n"
+        in result.stdout
+    )
 
 
-# def test_show_all_matches_command():
-#     result = runner.invoke(cli.app, ["all_matches"])
-#     assert result.exit_code == 0
+def test_show_all_matches_command():
+    result = runner.invoke(cli.app, ["all_matches"])
+    assert result.exit_code == 0
 
 
-# def test_show_ranking():
-#     result = runner.invoke(cli.app, ["show_table_rank"])
-#     assert result.exit_code == 0
+def test_show_ranking():
+    result = runner.invoke(cli.app, ["show_table_rank"])
+    assert result.exit_code == 0
 
 
 # Unitest for RankingController methods
