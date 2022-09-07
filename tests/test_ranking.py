@@ -12,9 +12,11 @@ from ranking import (
     ranking,
 )
 
+""" 
+This runner is what will "invoke" or "call" your command line application, 
+in order to perform the unittest for the cli commands.
+"""
 runner = CliRunner()
-""" This runner is what will "invoke" or "call" your command line application, 
-in order to perform the unittest for the cli commands  """
 
 
 # Adding inital data into the database
@@ -91,7 +93,7 @@ def test_version():
         ),
     ],
 )
-def test_add_command(mock_matches_json, match, expected):
+def test_add_command(match, expected):
     result = runner.invoke(cli.app, ["add", match])
     assert result.exit_code == 1
     assert (
@@ -167,3 +169,9 @@ def test_show_table_ranking(mock_matches_json):
     )
     assert table_rank == table_expected
     assert error == error_expected
+
+def test_clean_db(mock_matches_json):
+    ranking_controller = ranking.RankingController(mock_matches_json)
+    matches_list, error = ranking_controller.clean_db()
+    assert error == 0
+    assert len(matches_list) == 0

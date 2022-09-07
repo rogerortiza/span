@@ -140,6 +140,23 @@ def show_ranking() -> None:
     typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE, bold=True)
 
 
+@app.command(name="clean")
+def clean_db() -> None:
+    ranking_controller = get_rankin_controller()
+    _, error = ranking_controller.clean_db()
+
+    if error:
+        typer.secho(
+            f"Deleting all matches failed with error: '{ERRORS[error]}'",
+            fg=typer.colors.RED,
+        )
+        raise typer.Exit(1)
+    else:
+        typer.secho(
+            "The Ranking database was deleted succesfully", fg=typer.colors.GREEN
+        )
+
+
 def get_rankin_controller() -> ranking.RankingController:
     """Every time the Ranking application runs, it needs to access the
     RankinController class and connect the CLI with the database. This Method
