@@ -13,7 +13,7 @@ To start, make sure you are in the virtual enviroment.
 
 Then you can find the following global options executing this command:
 
-`python -m ranking help`
+`python -m ranking --help`
 
 **-v or --version:** shows the current version and exits the application. 
 
