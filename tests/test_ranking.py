@@ -99,7 +99,7 @@ def test_show_all_matches_command():
 
 
 def test_show_ranking():
-    result = runner.invoke(cli.app, ["show_table_rank"])
+    result = runner.invoke(cli.app, ["table_rank"])
     assert result.exit_code == 0
 
 
