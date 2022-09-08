@@ -84,7 +84,7 @@ def show_all_matches() -> None:
         raise typer.Exit()
 
     typer.secho("\nMatches list:\n", fg=typer.colors.BLUE, bold=True)
-    columns = ("ID.  ", "| Team 1    ", "| Team 2  ")
+    columns = ("ID.  ", "| Team 1      ", "| Team 2      ", "| Score ")
     headers = "".join(columns)
     typer.secho(headers, fg=typer.colors.BLUE, bold=True)
     typer.secho("-" * len(headers), fg=typer.colors.BLUE, bold=True)
@@ -94,7 +94,8 @@ def show_all_matches() -> None:
         typer.secho(
             f"{id}{(len(columns[0]) - len(str(id))) * ' '}"
             f"| {team_1['name']}{(len(columns[1]) - len(str(team_1['name'])) - 2 ) * ' '}"
-            f"| {team_2['name']}",
+            f"| {team_2['name']}{(len(columns[2]) - len(str(team_2['name'])) - 2 ) * ' '}"
+            f"| {team_1['goals']} - {team_2['goals']}",
             fg=typer.colors.BLUE,
             bold=True,
         )
@@ -102,7 +103,7 @@ def show_all_matches() -> None:
     typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE, bold=True)
 
 
-@app.command(name="show_table_rank")
+@app.command(name="table_rank")
 def show_ranking() -> None:
     """Show the table rank
 
@@ -142,6 +143,7 @@ def show_ranking() -> None:
 
 @app.command(name="clean")
 def clean_db() -> None:
+    """Clean the ranking database. Deletes all matches."""
     ranking_controller = get_rankin_controller()
     _, error = ranking_controller.clean_db()
 
